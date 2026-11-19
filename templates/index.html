@@ -1,0 +1,405 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Diabetes Prediction System</title>
+
+    <style>
+        /* =========================
+           RESET
+           ========================= */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        /* =========================
+           BODY
+           ========================= */
+
+        body {
+            min-height: 100vh;
+
+            font-family: "Segoe UI", Arial, sans-serif;
+
+            background-image:
+                linear-gradient(
+                    rgba(0, 100, 140, 0.50),
+                    rgba(0, 35, 60, 0.75)
+                ),
+                url("{% static 'DiabetesPrediction/images/background.jpg' %}");
+
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px 15px;
+        }
+
+
+        /* =========================
+           MAIN CONTENT
+           ========================= */
+
+        .home-container {
+            width: 100%;
+            max-width: 900px;
+
+            text-align: center;
+
+            color: white;
+
+            padding: 50px 30px;
+
+            animation: fadeIn 0.9s ease;
+        }
+
+
+        /* =========================
+           SMALL TOP TEXT
+           ========================= */
+
+        .welcome {
+            font-size: 18px;
+
+            font-weight: 500;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 18px;
+
+            opacity: 0.9;
+        }
+
+
+        /* =========================
+           MAIN HEADING
+           ========================= */
+
+        h1 {
+            color: white;
+
+            font-family: "Segoe UI", Arial, sans-serif;
+
+            font-size: clamp(38px, 7vw, 68px);
+
+            font-weight: 700;
+
+            line-height: 1.15;
+
+            letter-spacing: 1px;
+
+            margin: 0 auto 20px;
+
+            text-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.35);
+        }
+
+
+        /* =========================
+           DESCRIPTION
+           ========================= */
+
+        .description {
+            max-width: 650px;
+
+            margin: 0 auto 35px;
+
+            color: rgba(255, 255, 255, 0.9);
+
+            font-size: 17px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================
+           BUTTON
+           ========================= */
+
+        input[type="submit"] {
+            border: none;
+
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #08a6d5,
+                #007fa8
+            );
+
+            color: white;
+
+            padding: 15px 35px;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            font-size: 17px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.4px;
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.25);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+        }
+
+
+        input[type="submit"]:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.35);
+
+            background: linear-gradient(
+                135deg,
+                #00b8e6,
+                #006f96
+            );
+        }
+
+
+        input[type="submit"]:active {
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
+           FEATURES
+           ========================= */
+
+        .features {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            margin-top: 55px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .feature {
+            min-width: 180px;
+
+            padding: 18px 20px;
+
+            background: rgba(255, 255, 255, 0.12);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+            border-radius: 12px;
+
+            backdrop-filter: blur(6px);
+
+            transition:
+                transform 0.25s ease,
+                background 0.25s ease;
+        }
+
+
+        .feature:hover {
+            transform: translateY(-4px);
+
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+
+        .feature strong {
+            display: block;
+
+            font-size: 15px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .feature span {
+            font-size: 13px;
+
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+
+        /* =========================
+           ANIMATION
+           ========================= */
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform: translateY(0);
+            }
+        }
+
+
+        /* =========================
+           TABLETS
+           ========================= */
+
+        @media (max-width: 768px) {
+
+            body {
+                padding: 20px 15px;
+            }
+
+            .home-container {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: clamp(36px, 8vw, 55px);
+            }
+
+            .description {
+                font-size: 16px;
+            }
+
+            .features {
+                margin-top: 40px;
+            }
+        }
+
+
+        /* =========================
+           MOBILE
+           ========================= */
+
+        @media (max-width: 480px) {
+
+            body {
+                background-attachment: scroll;
+            }
+
+            .home-container {
+                padding: 30px 10px;
+            }
+
+            .welcome {
+                font-size: 14px;
+
+                letter-spacing: 1.5px;
+            }
+
+            h1 {
+                font-size: 34px;
+
+                line-height: 1.2;
+            }
+
+            .description {
+                font-size: 14px;
+
+                line-height: 1.6;
+
+                margin-bottom: 28px;
+            }
+
+            input[type="submit"] {
+                width: 100%;
+
+                max-width: 280px;
+
+                padding: 13px 20px;
+
+                font-size: 15px;
+            }
+
+            .features {
+                flex-direction: column;
+
+                align-items: center;
+
+                gap: 12px;
+
+                margin-top: 35px;
+            }
+
+            .feature {
+                width: 100%;
+
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="home-container">
+
+        <div class="welcome">
+            Welcome to
+        </div>
+
+        <h1>
+            Diabetes Prediction System
+        </h1>
+
+        <p class="description">
+            Use our intelligent prediction system to assess diabetes
+            risk based on your health information.
+        </p>
+
+        <form action="{% url 'symptoms' %}">
+    <input type="submit" value="Let's Get Started">
+</form>
+
+
+        <div class="features">
+
+            <div class="feature">
+                <strong>🩺 Health Assessment</strong>
+                <span>Enter your health information</span>
+            </div>
+
+            <div class="feature">
+                <strong>🤖 Intelligent Prediction</strong>
+                <span>Machine learning based analysis</span>
+            </div>
+
+            <div class="feature">
+                <strong>⚡ Quick Results</strong>
+                <span>Get your prediction instantly</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,1544 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Diabetes Symptom Screening</title>
+
+<style>
+
+    /* =========================
+
+       GENERAL RESET
+
+       ========================= */
+
+    * {
+
+        box-sizing: border-box;
+
+        margin: 0;
+
+        padding: 0;
+
+    }
+
+    /* =========================
+
+       PAGE / BACKGROUND
+
+       ========================= */
+
+    body {
+
+        min-height: 100vh;
+
+        font-family: "Segoe UI", Arial, sans-serif;
+
+        background-image:
+
+            linear-gradient(
+
+                rgba(0, 120, 160, 0.45),
+
+                rgba(0, 50, 80, 0.65)
+
+            ),
+
+            url("{% static 'DiabetesPrediction/images/background.jpg' %}");
+
+        background-repeat: no-repeat;
+
+        background-position: center;
+
+        background-size: cover;
+
+        background-attachment: fixed;
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+        padding: 30px 15px;
+
+    }
+
+    /* =========================
+
+       MAIN CONTAINER
+
+       ========================= */
+
+    .main {
+
+        position: relative;
+
+        width: 100%;
+
+        max-width: 650px;
+
+        margin: 0 auto;
+
+        background: rgba(255, 255, 255, 0.97);
+
+        border-radius: 20px;
+
+        padding: 40px;
+
+        box-shadow:
+
+            0 20px 50px rgba(0, 0, 0, 0.25);
+
+        animation: fadeIn 0.7s ease;
+
+    }
+
+    /* =========================
+
+       PAGE TITLE
+
+       ========================= */
+
+    .main h1 {
+
+        text-align: center;
+
+        color: #007fa8;
+
+        font-weight: 700;
+
+        font-size: clamp(26px, 5vw, 34px);
+
+        margin-bottom: 10px;
+
+        line-height: 1.3;
+
+    }
+
+    /* =========================
+
+       INTRODUCTION
+
+       ========================= */
+
+    .intro {
+
+        text-align: center;
+
+        color: #666;
+
+        line-height: 1.6;
+
+        font-size: 15px;
+
+        margin-bottom: 30px;
+
+    }
+
+    /* =========================
+
+       SECTION TITLE
+
+       ========================= */
+
+    .section-title {
+
+        color: #007fa8;
+
+        font-size: 21px;
+
+        font-weight: 700;
+
+        margin-bottom: 8px;
+
+    }
+
+    .section-description {
+
+        color: #666;
+
+        font-size: 14px;
+
+        margin-bottom: 20px;
+
+    }
+
+    /* =========================
+       PATIENT DETAILS
+       ========================= */
+
+    .patient-details {
+        margin-bottom: 25px;
+        padding: 20px;
+        background: #f8fafb;
+        border: 1px solid #d5dfe4;
+        border-radius: 12px;
+    }
+
+    .patient-details h2 {
+        color: #007fa8;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        color: #333;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .form-group input {
+        display: block;
+        width: 100%;
+        padding: 12px 13px;
+        border: 1px solid #cbd8de;
+        border-radius: 8px;
+        background: #fff;
+        color: #333;
+        font-family: inherit;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .form-group input:focus {
+        border-color: #08a6d5;
+        box-shadow: 0 0 0 3px rgba(8, 166, 213, 0.12);
+    }
+
+    .form-group input[readonly] {
+        background: #edf3f5;
+        color: #52636a;
+        cursor: not-allowed;
+    }
+
+
+    /* =========================
+
+       PROGRESS
+
+       ========================= */
+
+    .progress-container {
+
+        margin-bottom: 25px;
+
+    }
+
+    .progress-text {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        color: #666;
+
+        font-size: 13px;
+
+        margin-bottom: 6px;
+
+    }
+
+    .progress-bar {
+
+        width: 100%;
+
+        height: 8px;
+
+        background: #e5eef1;
+
+        border-radius: 10px;
+
+        overflow: hidden;
+
+    }
+
+    .progress-fill {
+
+        width: 0%;
+
+        height: 100%;
+
+        background: linear-gradient(
+
+            135deg,
+
+            #08a6d5,
+
+            #007fa8
+
+        );
+
+        border-radius: 10px;
+
+        transition: width 0.3s ease;
+
+    }
+
+    /* =========================
+
+       SYMPTOM QUESTIONS
+
+       ========================= */
+
+    .symptom-list {
+
+        width: 100%;
+
+    }
+
+    .symptom {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 20px;
+
+        padding: 17px 15px;
+
+        margin-bottom: 10px;
+
+        background: #f8fafb;
+
+        border: 1px solid #d5dfe4;
+
+        border-radius: 10px;
+
+        transition: all 0.2s ease;
+
+    }
+
+    .symptom:hover {
+
+        border-color: #18a9d1;
+
+        background: #ffffff;
+
+        box-shadow:
+
+            0 3px 10px rgba(0, 127, 168, 0.08);
+
+    }
+
+    .question {
+
+        color: #333;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        line-height: 1.5;
+
+    }
+
+    /* =========================
+
+       YES / NO OPTIONS
+
+       ========================= */
+
+    .options {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+        flex-shrink: 0;
+
+    }
+
+    .option {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 5px;
+
+        color: #555;
+
+        font-size: 14px;
+
+        cursor: pointer;
+
+    }
+
+    .option input {
+
+        width: 16px;
+
+        height: 16px;
+
+        accent-color: #08a6d5;
+
+        cursor: pointer;
+
+    }
+
+    /* =========================
+
+       VALIDATION MESSAGE
+
+       ========================= */
+
+    .error-message {
+
+        display: none;
+
+        margin-top: 15px;
+
+        padding: 12px 15px;
+
+        border-radius: 8px;
+
+        background: #fff1f1;
+
+        color: #c0392b;
+
+        border-left: 4px solid #e74c3c;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        text-align: left;
+
+    }
+
+    /* =========================
+
+       EVALUATE BUTTON
+
+       ========================= */
+
+    .evaluate-button {
+
+        display: block;
+
+        width: 100%;
+
+        margin: 25px auto 0;
+
+        padding: 13px 20px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background: linear-gradient(
+
+            135deg,
+
+            #08a6d5,
+
+            #007fa8
+
+        );
+
+        color: white;
+
+        cursor: pointer;
+
+        font-family: inherit;
+
+        font-size: 16px;
+
+        font-weight: 600;
+
+        letter-spacing: 0.3px;
+
+        box-shadow:
+
+            0 6px 15px rgba(0, 127, 168, 0.25);
+
+        transition: all 0.2s ease;
+
+    }
+
+    .evaluate-button:hover {
+
+        transform: translateY(-2px);
+
+        box-shadow:
+
+            0 9px 20px rgba(0, 127, 168, 0.35);
+
+    }
+
+    .evaluate-button:active {
+
+        transform: translateY(0);
+
+    }
+
+    /* =========================
+
+       RESULT SECTION
+
+       ========================= */
+
+    .result-section {
+
+        display: none;
+
+        margin-top: 30px;
+
+        padding-top: 25px;
+
+        border-top: 1px solid #d5dfe4;
+
+        text-align: center;
+
+    }
+
+    .result-title {
+
+        color: #007fa8;
+
+        font-size: 21px;
+
+        font-weight: 700;
+
+        margin-bottom: 15px;
+
+    }
+
+    .symptom-count {
+
+        color: #555;
+
+        font-size: 14px;
+
+        margin-bottom: 15px;
+
+    }
+
+    .result-card {
+
+        width: 100%;
+
+        padding: 20px;
+
+        border-radius: 10px;
+
+        background: #eef9fc;
+
+        color: #007fa8;
+
+        border-left: 4px solid #08a6d5;
+
+        text-align: center;
+
+    }
+
+    .result-heading {
+
+        font-size: 18px;
+
+        font-weight: 700;
+
+        margin-bottom: 10px;
+
+    }
+
+    .result-message {
+
+        color: #555;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+
+    }
+
+    /* =========================
+
+       CONTINUE BUTTON
+
+       ========================= */
+
+    .continue-button {
+
+        display: none;
+
+        width: 100%;
+
+        margin-top: 20px;
+
+        padding: 13px 20px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background: linear-gradient(
+
+            135deg,
+
+            #08a6d5,
+
+            #007fa8
+
+        );
+
+        color: white;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+        font-family: inherit;
+
+        font-size: 16px;
+
+        font-weight: 600;
+
+        box-shadow:
+
+            0 6px 15px rgba(0, 127, 168, 0.25);
+
+        transition: all 0.2s ease;
+
+    }
+
+    .continue-button:hover {
+
+        transform: translateY(-2px);
+
+        box-shadow:
+
+            0 9px 20px rgba(0, 127, 168, 0.35);
+
+    }
+
+    /* =========================
+
+       DISCLAIMER
+
+       ========================= */
+
+    .disclaimer {
+
+        margin-top: 25px;
+
+        color: #777;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+
+        text-align: center;
+
+    }
+
+    /* =========================
+
+       ANIMATION
+
+       ========================= */
+
+    @keyframes fadeIn {
+
+        from {
+
+            opacity: 0;
+
+            transform: translateY(20px);
+
+        }
+
+        to {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
+    }
+
+    /* =========================
+
+       TABLETS
+
+       ========================= */
+
+    @media (max-width: 768px) {
+
+        body {
+
+            padding: 25px 15px;
+
+        }
+
+        .main {
+
+            width: 100%;
+
+            max-width: 650px;
+
+            padding: 35px 30px;
+
+        }
+
+    }
+
+    /* =========================
+
+       MOBILE
+
+       ========================= */
+
+    @media (max-width: 600px) {
+
+        body {
+
+            padding: 15px 10px;
+
+            background-attachment: scroll;
+
+        }
+
+        .main {
+
+            width: 100%;
+
+            padding: 28px 20px;
+
+            border-radius: 15px;
+
+        }
+
+        .main h1 {
+
+            font-size: 25px;
+
+        }
+
+        .intro {
+
+            font-size: 14px;
+
+        }
+
+        .section-title {
+
+            font-size: 20px;
+
+        }
+
+        .symptom {
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+            gap: 12px;
+
+            padding: 15px;
+
+        }
+
+        .options {
+
+            width: 100%;
+
+            gap: 25px;
+
+        }
+
+        .evaluate-button,
+
+        .continue-button {
+
+            padding: 12px;
+
+            font-size: 15px;
+
+        }
+
+    }
+
+    .back-home {
+
+    margin-top: 25px;
+
+    margin-bottom: 15px;
+
+    text-align: center;
+
+}
+
+.back-button {
+
+    display: inline-block;
+
+    padding: 10px 18px;
+
+    border: 1px solid #08a6d5;
+
+    border-radius: 8px;
+
+    color: #007fa8;
+
+    background: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+
+}
+
+.back-button:hover {
+
+    background: #eef9fc;
+
+    transform: translateY(-1px);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="main">
+
+<form id="symptomForm" method="POST" action="{% url 'symptoms' %}">
+    {% csrf_token %}
+
+    <!-- =========================
+
+         PAGE HEADER
+
+         ========================= -->
+
+    <h1>Diabetes Symptom Screening</h1>
+
+    <p class="intro">
+
+        Answer the following questions based on the patient's
+
+        reported symptoms to determine whether further diabetes
+
+        risk assessment should be considered.
+
+    </p>
+
+    <!-- =========================
+
+         SYMPTOM ASSESSMENT
+
+         ========================= -->
+
+    <h2 class="section-title">
+
+        Symptom Assessment
+
+    </h2>
+
+    <p class="section-description">
+
+        Please answer all questions before evaluating the symptoms.
+
+    </p>
+
+    <!-- =========================
+
+         PROGRESS
+
+         ========================= -->
+
+    <div class="progress-container">
+
+        <div class="progress-text">
+
+            <span>Assessment Progress</span>
+
+            <span id="progressText">0/8 answered</span>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div
+
+                class="progress-fill"
+
+                id="progressFill">
+
+            </div>
+
+        </div>
+
+    </div>
+
+<!-- PATIENT DETAILS -->
+
+<div class="patient-details">
+
+    <h2>Patient Details</h2>
+
+    <div class="form-group">
+
+        <label for="patient_id">Patient ID</label>
+
+        <input
+    type="text"
+    id="patient_id"
+    name="patient_id"
+    value="{{ patient_id|default:'' }}"
+    placeholder="Enter Patient ID"
+    minlength="3"
+    maxlength="20"
+    pattern="[A-Za-z0-9-]+"
+    title="Patient ID must contain 3–20 characters, using letters, numbers or hyphens."
+    required
+>
+
+    </div>
+
+    <div class="form-group">
+
+        <label for="patient_name">Patient Name</label>
+
+        <input
+
+            type="text"
+
+            id="patient_name"
+
+            name="patient_name"
+            maxlength="150"
+            value="{{ patient_name|default:'' }}"
+
+            placeholder="Enter patient's full name"
+
+            required
+
+        >
+
+    </div>
+
+</div>
+
+    <!-- =========================
+
+         SYMPTOMS
+
+         ========================= -->
+
+    <div class="symptom-list">
+
+        <!-- 1 -->
+
+        <div class="symptom">
+
+            <div class="question">
+
+                1. Does the patient experience frequent urination?
+
+            </div>
+
+            <div class="options">
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom1"
+
+                        value="yes" {% if symptom1 == "yes" %}checked{% endif %}>
+
+                    Yes
+
+                </label>
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom1"
+
+                        value="no" {% if symptom1 == "no" %}checked{% endif %}>
+
+                    No
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- 2 -->
+
+        <div class="symptom">
+
+            <div class="question">
+
+                2. Does the patient experience excessive thirst?
+
+            </div>
+
+            <div class="options">
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom2"
+
+                        value="yes" {% if symptom2 == "yes" %}checked{% endif %}>
+
+                    Yes
+
+                </label>
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom2"
+
+                        value="no" {% if symptom2 == "no" %}checked{% endif %}>
+
+                    No
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- 3 -->
+
+        <div class="symptom">
+
+            <div class="question">
+
+                3. Does the patient experience increased hunger?
+
+            </div>
+
+            <div class="options">
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom3"
+
+                        value="yes" {% if symptom3 == "yes" %}checked{% endif %}>
+
+                    Yes
+
+                </label>
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom3"
+
+                        value="no" {% if symptom3 == "no" %}checked{% endif %}>
+
+                    No
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- 4 -->
+
+        <div class="symptom">
+
+            <div class="question">
+
+                4. Has the patient experienced unexplained weight loss?
+
+            </div>
+
+            <div class="options">
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom4"
+
+                        value="yes" {% if symptom4 == "yes" %}checked{% endif %}>
+
+                    Yes
+
+                </label>
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom4"
+
+                        value="no" {% if symptom4 == "no" %}checked{% endif %}>
+
+                    No
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- 5 -->
+
+        <div class="symptom">
+
+            <div class="question">
+
+                5. Does the patient experience unusual fatigue or tiredness?
+
+            </div>
+
+            <div class="options">
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom5"
+
+                        value="yes" {% if symptom5 == "yes" %}checked{% endif %}>
+
+                    Yes
+
+                </label>
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom5"
+
+                        value="no" {% if symptom5 == "no" %}checked{% endif %}>
+
+                    No
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- 6 -->
+
+        <div class="symptom">
+
+            <div class="question">
+
+                6. Does the patient experience blurred vision?
+
+            </div>
+
+            <div class="options">
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom6"
+
+                        value="yes" {% if symptom6 == "yes" %}checked{% endif %}>
+
+                    Yes
+
+                </label>
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom6"
+
+                        value="no" {% if symptom6 == "no" %}checked{% endif %}>
+
+                    No
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- 7 -->
+
+        <div class="symptom">
+
+            <div class="question">
+
+                7. Does the patient have wounds that heal slowly?
+
+            </div>
+
+            <div class="options">
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom7"
+
+                        value="yes" {% if symptom7 == "yes" %}checked{% endif %}>
+
+                    Yes
+
+                </label>
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom7"
+
+                        value="no" {% if symptom7 == "no" %}checked{% endif %}>
+
+                    No
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <!-- 8 -->
+
+        <div class="symptom">
+
+            <div class="question">
+
+                8. Does the patient experience frequent infections?
+
+            </div>
+
+            <div class="options">
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom8"
+
+                        value="yes" {% if symptom8 == "yes" %}checked{% endif %}>
+
+                    Yes
+
+                </label>
+
+                <label class="option">
+
+                    <input
+
+                        type="radio"
+
+                        name="symptom8"
+
+                        value="no" {% if symptom8 == "no" %}checked{% endif %}>
+
+                    No
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =========================
+
+         ERROR MESSAGE
+
+         ========================= -->
+
+    <div
+
+        class="error-message"
+
+        id="errorMessage" {% if error %}style="display:block"{% endif %}>
+
+        {{ error|default:"Please answer all symptom questions before proceeding." }}
+
+    </div>
+
+    <!-- =========================
+
+         EVALUATE BUTTON
+
+         ========================= -->
+
+    <button
+
+        type="submit"
+
+        class="evaluate-button"
+
+        id="evaluateButton">
+
+        Evaluate Symptoms
+
+    </button>
+
+    <!-- =========================
+
+         RESULT SECTION
+
+         ========================= -->
+
+    <div
+
+        class="result-section"
+
+        id="resultSection" {% if saved %}style="display:block"{% endif %}>
+
+        <h2 class="result-title">
+
+            Screening Result
+
+        </h2>
+
+        <p class="symptom-count">
+
+            Symptoms reported:
+
+            <strong>
+
+                <span id="symptomCount">{{ yes_count|default:0 }}</span>/8
+
+            </strong>
+
+        </p>
+
+        <div class="result-card">
+
+            <div
+
+                class="result-heading"
+
+                id="resultHeading">
+                {{ result_heading|default:"" }}
+            </div>
+
+            <p
+
+                class="result-message"
+
+                id="resultMessage">
+                {% if saved %}
+                    {% if assessment_recommended %}
+                        The patient has reported one or more symptoms commonly associated with diabetes. Further clinical assessment and appropriate testing are recommended. The diabetes risk prediction tool may be used as additional decision support.
+                    {% else %}
+                        The patient has not reported any of the selected diabetes-related symptoms. However, the absence of symptoms does not rule out diabetes. Clinical assessment and screening may still be appropriate based on other risk factors.
+                    {% endif %}
+                {% endif %}
+            </p>
+
+        </div>
+
+        <!-- Continue to prediction -->
+
+        <a
+
+            href="{% url 'predict' %}"
+
+            class="continue-button"
+
+            id="continueButton" {% if saved and assessment_recommended %}style="display:block"{% endif %}>
+
+            Continue to Prediction →
+
+        </a>
+
+        <p class="disclaimer">
+
+            Note: This screening provides a recommendation for
+
+            further assessment based on reported symptoms. It does
+
+            not diagnose or rule out diabetes. Clinical judgment
+
+            and appropriate diagnostic testing should be used where necessary.
+
+        </p>
+
+<a href="{% url 'home' %}" class="back-button">← Back to Home</a>
+
+    </div>
+
+</form>
+
+</div>
+
+<!-- =========================
+
+     JAVASCRIPT
+
+     ========================= -->
+
+
+<script>
+    const form = document.getElementById("symptomForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const resultSection = document.getElementById("resultSection");
+    const patientIdInput = document.getElementById("patient_id");
+    const patientNameInput = document.getElementById("patient_name");
+    const saved = "{{ saved|yesno:'true,false' }}" === "true";
+
+    function updateProgress() {
+        let answered = 0;
+        for (let i = 1; i <= 8; i++) {
+            if (form.querySelector('input[name="symptom' + i + '"]:checked')) {
+                answered++;
+            }
+        }
+        document.getElementById("progressText").textContent = answered + "/8 answered";
+        document.getElementById("progressFill").style.width = ((answered / 8) * 100) + "%";
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+        errorMessage.scrollIntoView({behavior: "smooth", block: "center"});
+    }
+
+    form.querySelectorAll('input[type="radio"]').forEach(function(input) {
+        input.addEventListener("change", function() {
+            updateProgress();
+            errorMessage.style.display = "none";
+        });
+    });
+
+    [patientIdInput, patientNameInput].forEach(function(input) {
+        input.addEventListener("input", function() {
+            input.setCustomValidity("");
+            errorMessage.style.display = "none";
+        });
+    });
+
+    form.addEventListener("submit", function(event) {
+        if (saved) {
+            event.preventDefault();
+            return;
+        }
+
+        patientIdInput.value = patientIdInput.value.trim();
+        patientNameInput.value = patientNameInput.value.trim();
+
+        if (!patientIdInput.value) {
+            event.preventDefault();
+            patientIdInput.setCustomValidity("Please enter the Patient ID.");
+            patientIdInput.reportValidity();
+            return;
+        }
+        patientIdInput.setCustomValidity("");
+
+        if (!patientNameInput.value) {
+            event.preventDefault();
+            patientNameInput.setCustomValidity("Please enter the patient's full name.");
+            patientNameInput.reportValidity();
+            return;
+        }
+        patientNameInput.setCustomValidity("");
+
+        if (!form.reportValidity()) {
+            event.preventDefault();
+            return;
+        }
+
+        for (let i = 1; i <= 8; i++) {
+            if (!form.querySelector('input[name="symptom' + i + '"]:checked')) {
+                event.preventDefault();
+                showError("Please answer all eight symptom questions before proceeding.");
+                return;
+            }
+        }
+
+        errorMessage.style.display = "none";
+        document.getElementById("evaluateButton").disabled = true;
+        document.getElementById("evaluateButton").textContent = "Saving assessment...";
+    });
+
+    updateProgress();
+
+    if (saved) {
+        form.querySelectorAll("input").forEach(function(input) {
+            if (input.type !== "hidden") input.readOnly = true;
+            if (input.type === "radio") input.disabled = true;
+        });
+        document.getElementById("evaluateButton").style.display = "none";
+        resultSection.scrollIntoView({behavior: "smooth", block: "start"});
+    }
+</script>
+
+
+</body>
+
+</html>

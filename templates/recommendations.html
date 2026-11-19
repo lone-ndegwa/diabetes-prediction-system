@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recommendations</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #e8f8ff, #dff7f2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #126e82;
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .recommendation {
+            background: #f5fbfd;
+            border-left: 5px solid #1597bb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .recommendation h2 {
+            margin-top: 0;
+            color: #126e82;
+            font-size: 20px;
+        }
+
+        .recommendation p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .disclaimer {
+            margin-top: 30px;
+            padding: 18px;
+            background: #fff8e6;
+            border-radius: 10px;
+            color: #6b5a20;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            background: linear-gradient(135deg, #1597bb, #126e82);
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .back-button {
+            background: #777;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Recommended Next Steps</h1>
+
+    <p class="intro">
+        The assessment indicates a higher predicted risk of diabetes.
+        The following steps may help guide further evaluation and healthy
+        lifestyle choices.
+    </p>
+
+    <div class="recommendation">
+        <h2>1. Seek Further Medical Assessment</h2>
+        <p>
+            Arrange an appointment with a qualified healthcare professional
+            for further evaluation. Appropriate diagnostic testing may be
+            recommended based on the patient's individual circumstances.
+        </p>
+    </div>
+
+    <div class="recommendation">
+        <h2>2. Discuss Blood Glucose Testing</h2>
+        <p>
+            A healthcare professional can determine whether additional
+            blood glucose testing is appropriate and interpret the results
+            in the context of the patient's medical history.
+        </p>
+    </div>
+
+    <div class="recommendation">
+        <h2>3. Maintain a Healthy Diet</h2>
+        <p>
+            Aim for a balanced diet that includes vegetables, whole grains,
+            lean sources of protein, and other nutrient-rich foods while
+            limiting excessive intake of added sugars and highly processed
+            foods.
+        </p>
+    </div>
+
+    <div class="recommendation">
+        <h2>4. Stay Physically Active</h2>
+        <p>
+            Regular physical activity can support overall health and help
+            with blood glucose management. Activity should be appropriate
+            for the individual's health and physical condition.
+        </p>
+    </div>
+
+    <div class="recommendation">
+        <h2>5. Monitor Health Regularly</h2>
+        <p>
+            Continue appropriate health monitoring and discuss any concerning
+            symptoms or changes with a healthcare professional.
+        </p>
+    </div>
+
+    <div class="disclaimer">
+        <strong>Important:</strong>
+        This system provides a risk prediction and general recommendations.
+        It does not diagnose diabetes. The prediction should not replace
+        professional medical assessment, diagnostic testing, or treatment
+        from a qualified healthcare professional.
+    </div>
+
+    <div class="buttons">
+        <a href="{% url 'predict' %}" class="button">
+            ← Back to Prediction
+        </a>
+
+        <a href="{% url 'home' %}" class="button back-button">
+            Back to Home
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
