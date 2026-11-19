@@ -4,6 +4,8 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.db.models import Q
 from .models import Patient, SymptomAssessment, PredictionRecord
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.paginator import Paginator
 
 import pickle
 import os
@@ -535,5 +537,99 @@ def result(request):
     return render(
         request,
         "predict.html",
+        context
+    )
+
+# ============================================================
+# ADMINISTRATOR PATIENT RECORDS DASHBOARD
+# ============================================================
+
+@staff_member_required
+def patient_records(request):
+
+    search_query = request.GET.get("q", "").strip()
+    result_filter = request.GET.get("result", "").strip()
+
+    # --------------------------------------------------------
+    # PATIENT RECORDS
+    # --------------------------------------------------------
+
+    patients = Patient.objects.all().order_by("-created_at")
+
+    if search_query:
+        patients = patients.filter(
+            Q(patient_id__icontains=search_query) |
+            Q(patient_name__icontains=search_query)
+        )
+
+    # --------------------------------------------------------
+    # PREDICTION RECORDS
+    # --------------------------------------------------------
+
+    predictions = PredictionRecord.objects.select_related(
+        "patient"
+    ).order_by("-created_at")
+
+    if search_query:
+        predictions = predictions.filter(
+            Q(patient__patient_id__icontains=search_query) |
+            Q(patient__patient_name__icontains=search_query)
+        )
+
+    if result_filter:
+        predictions = predictions.filter(
+            prediction_result=result_filter
+        )
+
+    # --------------------------------------------------------
+    # SYMPTOM ASSESSMENTS
+    # --------------------------------------------------------
+
+    assessments = SymptomAssessment.objects.select_related(
+        "patient"
+    ).order_by("-created_at")
+
+    if search_query:
+        assessments = assessments.filter(
+            Q(patient__patient_id__icontains=search_query) |
+            Q(patient__patient_name__icontains=search_query)
+        )
+
+    # --------------------------------------------------------
+    # PAGINATION
+    # --------------------------------------------------------
+
+    patient_page = Paginator(patients, 10).get_page(
+        request.GET.get("patients_page")
+    )
+
+    prediction_page = Paginator(predictions, 10).get_page(
+        request.GET.get("predictions_page")
+    )
+
+    assessment_page = Paginator(assessments, 10).get_page(
+        request.GET.get("assessments_page")
+    )
+
+    # --------------------------------------------------------
+    # DASHBOARD STATISTICS
+    # --------------------------------------------------------
+
+    context = {
+        "total_patients": Patient.objects.count(),
+        "total_predictions": PredictionRecord.objects.count(),
+        "total_assessments": SymptomAssessment.objects.count(),
+
+        "patients": patient_page,
+        "predictions": prediction_page,
+        "assessments": assessment_page,
+
+        "search_query": search_query,
+        "result_filter": result_filter,
+    }
+
+    return render(
+        request,
+        "records.html",
         context
     )

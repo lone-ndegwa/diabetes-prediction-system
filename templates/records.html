@@ -1,0 +1,19 @@
+{% if assessments.has_next %}
+                    <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&assessments_page={{ assessments.next_page_number }}">
+                        Next
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+
+    <footer>
+        Diabetes Prediction System | Restricted Administrator Access
+    </footer>
+
+</div>
+
+</body>
+</html>

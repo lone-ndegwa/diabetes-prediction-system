@@ -20,7 +20,7 @@ class Patient(models.Model):
         auto_now_add=True
     )
 
-    def str(self):
+    def __str__(self):
         return f"{self.patient_id} - {self.patient_name}"
 
 
@@ -53,7 +53,7 @@ class SymptomAssessment(models.Model):
         auto_now_add=True
     )
 
-    def str(self):
+    def __str(self):
         return (
             f"Symptoms - {self.patient.patient_id} "
             f"({self.created_at:%Y-%m-%d})"
@@ -92,7 +92,7 @@ class PredictionRecord(models.Model):
         auto_now_add=True
     )
 
-    def str(self):
+    def __str__(self):
         return (
             f"Prediction - {self.patient.patient_id} "
             f"({self.created_at:%Y-%m-%d})"
