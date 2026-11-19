@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.db.models import Q
-from .models import Patient, SymptomAssessment, PredictionRecord
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
+
+from .models import Patient, SymptomAssessment, PredictionRecord
 
 import pickle
 import os
@@ -505,6 +506,7 @@ def result(request):
 
     # --------------------------------------------------------
     # Save prediction in the database
+    # probability stores class 1 probability (percentage)
     # --------------------------------------------------------
 
     PredictionRecord.objects.create(
@@ -540,12 +542,17 @@ def result(request):
         context
     )
 
+
 # ============================================================
 # ADMINISTRATOR PATIENT RECORDS DASHBOARD
 # ============================================================
 
 @staff_member_required
 def patient_records(request):
+
+    # --------------------------------------------------------
+    # SEARCH AND FILTER
+    # --------------------------------------------------------
 
     search_query = request.GET.get("q", "").strip()
     result_filter = request.GET.get("result", "").strip()
@@ -610,6 +617,43 @@ def patient_records(request):
     assessment_page = Paginator(assessments, 10).get_page(
         request.GET.get("assessments_page")
     )
+
+    # --------------------------------------------------------
+    # FORMAT PREDICTION RESULTS
+    # --------------------------------------------------------
+
+    for record in prediction_page:
+
+        if record.prediction_result == "Higher Predicted Risk":
+
+            record.display_result = "Positive"
+
+            # Stored probability is the probability of class 1.
+            record.display_probability = record.probability
+
+        elif record.prediction_result == "Lower Predicted Risk":
+
+            record.display_result = "Negative"
+
+            # For a negative prediction, display class 0 probability.
+            record.display_probability = round(
+                100 - record.probability, 2
+            )
+
+        else:
+
+            record.display_result = "N/A"
+            record.display_probability = None
+
+    # --------------------------------------------------------
+    # FORMAT SYMPTOM ASSESSMENTS
+    # --------------------------------------------------------
+
+    for assessment in assessment_page:
+
+        assessment.symptom_percentage = round(
+            (assessment.yes_count / 8) * 100, 1
+        )
 
     # --------------------------------------------------------
     # DASHBOARD STATISTICS

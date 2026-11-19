@@ -1,4 +1,625 @@
-</div>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Patient Records | Diabetes Prediction System</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #e8f8ff, #dff7f2);
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1250px;
+            margin: auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #126e82;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #126e82;
+            font-size: 21px;
+        }
+
+        .intro {
+            text-align: center;
+            color: #555;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        /* DASHBOARD STATISTICS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: #f5fbfd;
+            border-left: 5px solid #1597bb;
+            border-radius: 10px;
+            padding: 22px;
+            text-align: center;
+        }
+
+        .stat-card p {
+            color: #555;
+            margin: 0 0 10px;
+            font-size: 14px;
+        }
+
+        .stat-card h2 {
+            font-size: 30px;
+            margin: 0;
+        }
+
+        /* SECTIONS */
+
+        .section {
+            margin-top: 35px;
+        }
+
+        .section-title {
+            border-bottom: 2px solid #e8f8ff;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* SEARCH AND FILTER */
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        input,
+        select {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            border: 1px solid #d5e5e9;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #1597bb;
+        }
+
+        button {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            background: linear-gradient(135deg, #1597bb, #126e82);
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .reset-button {
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: #777;
+            color: white;
+            font-size: 14px;
+        }
+
+        /* TABLES */
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #e5eef1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th {
+            background: #e8f8ff;
+            color: #126e82;
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #edf2f4;
+            color: #555;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background: #f5fbfd;
+        }
+
+        /* RESULT LABELS */
+
+        .positive {
+            color: #c0392b;
+            background: #fdecea;
+            padding: 6px 11px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #16804a;
+            background: #e8f7ed;
+            padding: 6px 11px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .recommended {
+            color: #b7791f;
+            background: #fff8e6;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .not-recommended {
+            color: #16804a;
+            background: #e8f7ed;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .na {
+            color: #777;
+            background: #f0f0f0;
+            padding: 6px 11px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #888;
+        }
+
+        /* PAGINATION */
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            background: #e8f8ff;
+            color: #126e82;
+            margin-left: 5px;
+        }
+
+        .pagination a:hover {
+            background: #d0f0f5;
+        }
+
+        /* DISCLAIMER */
+
+        .disclaimer {
+            margin-top: 35px;
+            padding: 18px;
+            background: #fff8e6;
+            border-radius: 10px;
+            color: #6b5a20;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        /* NAVIGATION */
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            background: linear-gradient(135deg, #1597bb, #126e82);
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .back-button {
+            background: #777;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* MOBILE RESPONSIVENESS */
+
+        @media (max-width: 700px) {
+
+            .container {
+                padding: 25px 18px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            input,
+            select,
+            .filters button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- PAGE HEADER -->
+
+    <h1>Patient Records Dashboard</h1>
+
+    <p class="intro">
+        Welcome to the Diabetes Prediction System administrator dashboard.
+        View registered patients, screening results, prediction history
+        and symptom assessments.
+    </p>
+
+
+    <!-- DASHBOARD STATISTICS -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <p>Total Registered Patients</p>
+
+            <h2>{{ total_patients }}</h2>
+
+        </div>
+
+        <div class="stat-card">
+
+            <p>Total Symptom Assessments</p>
+
+            <h2>{{ total_assessments }}</h2>
+
+        </div>
+
+        <div class="stat-card">
+
+            <p>Total Predictions</p>
+
+            <h2>{{ total_predictions }}</h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH AND FILTER -->
+
+    <div class="section">
+
+        <h2 class="section-title">
+            Search Patient Records
+        </h2>
+
+        <form method="GET" class="filters">
+
+            <input
+                type="text"
+                name="q"
+                placeholder="Search by patient ID or name..."
+                value="{{ search_query }}"
+            >
+
+            <select name="result">
+
+                <option value="">
+                    All prediction results
+                </option>
+
+                <option value="Higher Predicted Risk"
+                    {% if result_filter == "Higher Predicted Risk" %}selected{% endif %}>
+                    Positive
+                </option>
+
+                <option value="Lower Predicted Risk"
+                    {% if result_filter == "Lower Predicted Risk" %}selected{% endif %}>
+                    Negative
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Search Records
+            </button>
+
+            <a href="{% url 'patient_records' %}" class="reset-button">
+                Reset
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <!-- REGISTERED PATIENTS -->
+
+    <div class="section">
+
+        <h2 class="section-title">
+            Registered Patients
+        </h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Patient Name</th>
+                        <th>Date Registered</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for patient in patients %}
+
+                    <tr>
+
+                        <td>{{ patient.patient_id }}</td>
+
+                        <td>{{ patient.patient_name }}</td>
+
+                        <td>
+                            {{ patient.created_at|date:"d M Y, H:i" }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="3" class="empty">
+                            No patient records found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="pagination">
+
+            <span>
+                Page {{ patients.number }} of {{ patients.paginator.num_pages }}
+            </span>
+
+            <span>
+
+                {% if patients.has_previous %}
+
+                <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&patients_page={{ patients.previous_page_number }}">
+                    Previous
+                </a>
+
+                {% endif %}
+
+                {% if patients.has_next %}
+
+                <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&patients_page={{ patients.next_page_number }}">
+                    Next
+                </a>
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- PREDICTION HISTORY -->
+
+    <div class="section">
+
+        <h2 class="section-title">
+            Diabetes Prediction History
+        </h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Patient Name</th>
+                        <th>Pregnancies</th>
+                        <th>Glucose</th>
+                        <th>Blood Pressure</th>
+                        <th>BMI</th>
+                        <th>Age</th>
+                        <th>Screening Result</th>
+                        <th>Probability</th>
+                        <th>Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for record in predictions %}
+
+                    <tr>
+
+                        <td>
+                            {{ record.patient.patient_id }}
+                        </td>
+
+                        <td>
+                            {{ record.patient.patient_name }}
+                        </td>
+
+                        <td>{{ record.pregnancies }}</td>
+
+                        <td>{{ record.glucose }}</td>
+
+                        <td>{{ record.blood_pressure }}</td>
+
+                        <td>{{ record.bmi }}</td>
+
+                        <td>{{ record.age }}</td>
+
+                        <td>
+
+                            {% if record.display_result == "Positive" %}
+
+                                <span class="positive">
+                                    Positive
+                                </span>
+
+                            {% elif record.display_result == "Negative" %}
+
+                                <span class="negative">
+                                    Negative
+                                </span>
+
+                            {% else %}
+
+                                <span class="na">N/A</span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if record.display_probability != None %}
+
+                                {{ record.display_probability|floatformat:2 }}%
+
+                            {% else %}
+
+                                <span class="na">N/A</span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ record.created_at|date:"d M Y, H:i" }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="10" class="empty">
+                            No prediction records found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
 
         <div class="pagination">
 
@@ -9,15 +630,19 @@
             <span>
 
                 {% if predictions.has_previous %}
+
                 <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&predictions_page={{ predictions.previous_page_number }}">
                     Previous
                 </a>
+
                 {% endif %}
 
                 {% if predictions.has_next %}
+
                 <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&predictions_page={{ predictions.next_page_number }}">
                     Next
                 </a>
+
                 {% endif %}
 
             </span>
@@ -31,20 +656,26 @@
 
     <div class="section">
 
-        <h2 class="section-title">Symptom Assessment History</h2>
+        <h2 class="section-title">
+            Symptom Assessment History
+        </h2>
 
         <div class="table-wrapper">
 
             <table>
 
                 <thead>
+
                     <tr>
                         <th>Patient ID</th>
                         <th>Patient Name</th>
                         <th>Positive Symptoms</th>
-                        <th>Assessment Recommendation</th>
+                        <th>Symptom Percentage</th>
+                        <th>Further Assessment</th>
+                        <th>Result</th>
                         <th>Date</th>
                     </tr>
+
                 </thead>
 
                 <tbody>
@@ -53,26 +684,68 @@
 
                     <tr>
 
-                        <td>{{ assessment.patient.patient_id }}</td>
-                        <td>{{ assessment.patient.patient_name }}</td>
-                        <td>{{ assessment.yes_count }}/8</td>
-
                         <td>
-                            {% if assessment.assessment_recommended %}
-                                <span class="recommended">Recommended</span>
-                            {% else %}
-                                <span class="not-recommended">Not recommended</span>
-                            {% endif %}
+                            {{ assessment.patient.patient_id }}
                         </td>
 
-                        <td>{{ assessment.created_at|date:"d M Y, H:i" }}</td>
+                        <td>
+                            {{ assessment.patient.patient_name }}
+                        </td>
+
+                        <td>
+                            {{ assessment.yes_count }}/8
+                        </td>
+
+                        <td>
+                            {{ assessment.symptom_percentage }}%
+                        </td>
+
+                        <td>
+
+                            {% if assessment.assessment_recommended %}
+
+                                <span class="recommended">
+                                    Recommended
+                                </span>
+
+                            {% else %}
+
+                                <span class="not-recommended">
+                                    Not Recommended
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if assessment.assessment_recommended %}
+
+                                <span class="recommended">
+                                    Further Assessment
+                                </span>
+
+                            {% else %}
+
+                                <span class="na">
+                                    N/A
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ assessment.created_at|date:"d M Y, H:i" }}
+                        </td>
 
                     </tr>
 
                     {% empty %}
 
                     <tr>
-                        <td colspan="5" class="empty">
+                        <td colspan="7" class="empty">
                             No symptom assessments found.
                         </td>
                     </tr>
@@ -94,15 +767,19 @@
             <span>
 
                 {% if assessments.has_previous %}
+
                 <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&assessments_page={{ assessments.previous_page_number }}">
                     Previous
                 </a>
+
                 {% endif %}
 
                 {% if assessments.has_next %}
+
                 <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&assessments_page={{ assessments.next_page_number }}">
                     Next
                 </a>
+
                 {% endif %}
 
             </span>
@@ -115,15 +792,27 @@
     <!-- DISCLAIMER -->
 
     <div class="disclaimer">
+
         <strong>Privacy notice:</strong>
+
         This dashboard contains confidential patient information.
         Access is restricted to authorized administrators.
         Patient records should be handled securely and should not be
         shared with unauthorized individuals.
+
+        <br><br>
+
+        <strong>Medical disclaimer:</strong>
+
+        Positive and negative results represent predictions generated
+        by the machine learning model. They are not confirmed medical
+        diagnoses. Probabilities represent the model's predicted-class
+        confidence and should not be interpreted as clinical certainty.
+
     </div>
 
 
-    <!-- NAVIGATION -->
+    <!-- NAVIGATION BUTTONS -->
 
     <div class="buttons">
 
@@ -138,11 +827,17 @@
     </div>
 
 
+    <!-- FOOTER -->
+
     <footer>
-        Diabetes Prediction System | Restricted Administrator Access
+
+        Diabetes Prediction System |
+        Restricted Administrator Access
+
     </footer>
 
 </div>
 
 </body>
+
 </html>
