@@ -1,10 +1,139 @@
-{% if assessments.has_next %}
-                    <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&assessments_page={{ assessments.next_page_number }}">
-                        Next
-                    </a>
+</div>
+
+        <div class="pagination">
+
+            <span>
+                Page {{ predictions.number }} of {{ predictions.paginator.num_pages }}
+            </span>
+
+            <span>
+
+                {% if predictions.has_previous %}
+                <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&predictions_page={{ predictions.previous_page_number }}">
+                    Previous
+                </a>
                 {% endif %}
-            </div>
+
+                {% if predictions.has_next %}
+                <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&predictions_page={{ predictions.next_page_number }}">
+                    Next
+                </a>
+                {% endif %}
+
+            </span>
+
         </div>
+
+    </div>
+
+
+    <!-- SYMPTOM ASSESSMENT HISTORY -->
+
+    <div class="section">
+
+        <h2 class="section-title">Symptom Assessment History</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Patient Name</th>
+                        <th>Positive Symptoms</th>
+                        <th>Assessment Recommendation</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for assessment in assessments %}
+
+                    <tr>
+
+                        <td>{{ assessment.patient.patient_id }}</td>
+                        <td>{{ assessment.patient.patient_name }}</td>
+                        <td>{{ assessment.yes_count }}/8</td>
+
+                        <td>
+                            {% if assessment.assessment_recommended %}
+                                <span class="recommended">Recommended</span>
+                            {% else %}
+                                <span class="not-recommended">Not recommended</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ assessment.created_at|date:"d M Y, H:i" }}</td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="empty">
+                            No symptom assessments found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="pagination">
+
+            <span>
+                Page {{ assessments.number }} of {{ assessments.paginator.num_pages }}
+            </span>
+
+            <span>
+
+                {% if assessments.has_previous %}
+                <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&assessments_page={{ assessments.previous_page_number }}">
+                    Previous
+                </a>
+                {% endif %}
+
+                {% if assessments.has_next %}
+                <a href="?q={{ search_query|urlencode }}&result={{ result_filter|urlencode }}&assessments_page={{ assessments.next_page_number }}">
+                    Next
+                </a>
+                {% endif %}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- DISCLAIMER -->
+
+    <div class="disclaimer">
+        <strong>Privacy notice:</strong>
+        This dashboard contains confidential patient information.
+        Access is restricted to authorized administrators.
+        Patient records should be handled securely and should not be
+        shared with unauthorized individuals.
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="buttons">
+
+        <a href="{% url 'home' %}" class="button">
+            ← Back to Home
+        </a>
+
+        <a href="{% url 'admin:index' %}" class="button back-button">
+            Django Admin
+        </a>
 
     </div>
 
